@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="msapplication-tap-highlight" content="no" />
+  <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+  <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *"
+  />
+  <link rel="stylesheet" type="text/css" href="css/index.css" />
+  <title>Hello World</title>
+  <style>
+  #div1{width:20px;height:20px;background: red}
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <h1>PhoneGap</h1>
+    <input type="button" value="getCurrentHeading" id="btn1">
+    <input type="button" value="watchHeading" id="btn2">
+    <input type="button" value="clearWatch" id="btn3">
+    <div id="div1">空</div>
+  </div>
+  <script type="text/javascript" src="cordova.js"></script>
+  <script>
+    var btn1 = document.getElementById('btn1');
+    var btn2 = document.getElementById('btn2');
+    var btn3 = document.getElementById('btn3');
+
+    document.addEventListener('deviceready', function () {
+
+      btn1.onclick = function () {
+        navigator.compass.getCurrentHeading(
+          function(heading){
+            div1.innerHTML=heading.magneticHeading
+          }, 
+          function(){
+            alert('getCurrentHeading onError');
+          }
+        );
+      }
+      timer=null;
+      btn2.onclick = function () {
+        timer = navigator.compass.watchHeading(
+          function(heading){
+            div1.innerHTML=heading.magneticHeading;
+            div1.style.webkitTransform='rotate('+heading.magneticHeading+'deg)';
+          }, 
+          function(){
+            alert('watchHeading onError');
+          },
+          {
+            frequency: 100
+          }
+        );
+      }
+      btn3.onclick = function () {
+        navigator.compass.clearWatch(timer);
+      }
+
+    }, false);
+
+
+
+  </script>
+</body>
+
+</html>

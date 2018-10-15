@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="msapplication-tap-highlight" content="no" />
+  <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+  <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *"
+  />
+  <link rel="stylesheet" type="text/css" href="css/index.css" />
+  <title>Hello World</title>
+  <style>
+    #div1 {
+      width: 20px;
+      height: 20px;
+      background: red
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <h1>PhoneGap</h1>
+    <input type="button" value="captureVideo" id="btn1">
+    <input type="button" value="getPicture" id="btn2">
+    <img alt="" id="myImage">
+    <video src="" id="v1" controls></video>
+  </div>
+  <script type="text/javascript" src="cordova.js"></script>
+  <script>
+    var btn1 = document.getElementById('btn1');
+    var btn2 = document.getElementById('btn2');
+
+    document.addEventListener('deviceready', function () {
+
+      btn1.onclick = function () {
+        // 采集操作成功完成后的回调函数
+        var captureSuccess = function (mediaFiles) {
+          path = mediaFiles[0].fullPath;
+          // 对文件进行感兴趣的操作
+          //上传到服务器 ajax
+          v1.src = path;
+        };
+
+        // 采集操作出错后的回调函数 
+        var captureError = function (error) {
+          navigator.notification.alert('Error code: ' + error.code, null, 'Capture Error');
+        };
+
+        // 开始采集视频
+        navigator.device.capture.captureVideo(captureSuccess, captureError, { limit: 1 });
+      }
+      btn2.onclick = function () {
+        function onSuccess(imageURI) {
+          var image = document.getElementById('myImage');
+          image.src = imageURI;
+        }
+
+        function onFail(message) {
+          alert('Failed because: ' + message);
+        }
+        navigator.camera.getPicture(
+          onSuccess,
+          onFail,
+          {
+            quality: 80,
+            destinationType: Camera.DestinationType.FILE_URI,
+            sourceType: 1,
+            allowEdit: true
+          });
+      }
+
+
+    }, false);
+
+
+
+  </script>
+</body>
+
+</html>
